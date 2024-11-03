@@ -32,18 +32,20 @@ function Login() {
         body: JSON.stringify(loginInfo)
       });
 
-      const result = await response.json();
-      console.log("Login result:", result);
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || "Login failed. Please try again.");
+      }
 
+      const result = await response.json();
       const { success, message, jwtToken, name, error } = result;
       if (success) {
         handleSuccess(message);
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('loggedInUser', name);
-        console.log("Navigating to /home");
         navigate('/home');
       } else if (error) {
-        handleError(error?.details[0].message);
+        handleError(error.details[0].message);
       } else {
         handleError(message || "Login failed. Please try again.");
       }
@@ -63,6 +65,7 @@ function Login() {
             type='email'
             name='email'
             placeholder='Enter your email...'
+            required
           />
         </div>
         <div>
@@ -72,6 +75,8 @@ function Login() {
             type='password'
             name='password'
             placeholder='Enter your password...'
+            autoComplete='current-password'
+            required
           />
         </div>
         <button type='submit'>Login</button>
