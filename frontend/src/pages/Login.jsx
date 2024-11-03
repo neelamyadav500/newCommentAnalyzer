@@ -8,7 +8,7 @@ function Login() {
     email: '',
     password: ''
   });
-  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,19 +19,11 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = loginInfo;
-
-    // Basic email format validation
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !password) {
       return handleError("Details are required!");
     }
-    if (!emailPattern.test(email)) {
-      return handleError("Please enter a valid email address.");
-    }
-
-    setLoading(true);
     try {
-      const url = "https://new-comment-analyzer.vercel.app/auth/login";
+      const url = "http://localhost:8080/auth/login";
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -40,25 +32,23 @@ function Login() {
         body: JSON.stringify(loginInfo)
       });
 
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse.error || "Login failed. Please try again.");
-      }
-
       const result = await response.json();
-      const { success, message, jwtToken, name } = result;
+      console.log("Login result:", result);
+
+      const { success, message, jwtToken, name, error } = result;
       if (success) {
         handleSuccess(message);
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('loggedInUser', name);
+        console.log("Navigating to /home");
         navigate('/home');
+      } else if (error) {
+        handleError(error?.details[0].message);
       } else {
         handleError(message || "Login failed. Please try again.");
       }
     } catch (err) {
       handleError(err.message);
-    } finally {
-      setLoading(false); // Reset loading state
     }
   };
 
@@ -69,30 +59,22 @@ function Login() {
         <div>
           <label htmlFor='email'>Email</label>
           <input
-            id='email' // Assign id here
             onChange={handleChange}
             type='email'
             name='email'
             placeholder='Enter your email...'
-            required
-            autoComplete='username'
           />
         </div>
         <div>
           <label htmlFor='password'>Password</label>
           <input
-            id='password' // Assign id here
             onChange={handleChange}
             type='password'
             name='password'
             placeholder='Enter your password...'
-            autoComplete='current-password'
-            required
           />
         </div>
-        <button type='submit' disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
+        <button type='submit'>Login</button>
         <span>Don't have an account?</span>
         <Link to='/signup'>Signup</Link>
       </form>
