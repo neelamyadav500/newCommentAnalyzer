@@ -7,57 +7,47 @@ function Signup() {
   const [signupInfo, setSignupInfo] = useState({
     name: '',
     email: '',
-    password: '',
+    password: ''
   });
-  const [loading, setLoading] = useState(false); // New state for loading
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSignupInfo((prevInfo) => ({
-      ...prevInfo,
-      [name]: value,
-    }));
+    setSignupInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     const { name, email, password } = signupInfo;
-
-    // Basic validation
     if (!name || !email || !password) {
-      return handleError("All fields are required!");
+      return handleError("Details are required!");
     }
-
-    setLoading(true); // Start loading
     try {
       const url = "https://new-comment-analyzer.vercel.app/auth/signup";
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(signupInfo),
+        body: JSON.stringify(signupInfo)
       });
-
+      
       const result = await response.json();
       const { success, message, error } = result;
-
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
           navigate('/login');
         }, 500);
       } else if (error) {
-        const details = error?.details[0]?.message || "An error occurred";
+        const details = error?.details[0].message;
         handleError(details);
       } else {
         handleError(message);
       }
     } catch (err) {
-      handleError(err.message || "Network error occurred");
-    } finally {
-      setLoading(false); // Stop loading
+      handleError(err);
     }
   };
 
@@ -68,40 +58,37 @@ function Signup() {
         <div>
           <label htmlFor='name'>Name</label>
           <input
-            id='name' // Added id for accessibility
             onChange={handleChange}
             type='text'
             name='name'
-            value={signupInfo.name} // Binding the input value
             autoFocus
             placeholder='Enter your name...'
+            required // Added required attribute
           />
         </div>
         <div>
           <label htmlFor='email'>Email</label>
           <input
-            id='email' // Added id for accessibility
             onChange={handleChange}
             type='email'
             name='email'
-            value={signupInfo.email} // Binding the input value
             placeholder='Enter your email...'
+            required // Added required attribute
+            autoComplete='email' // Added autocomplete attribute
           />
         </div>
         <div>
           <label htmlFor='password'>Password</label>
           <input
-            id='password' // Added id for accessibility
             onChange={handleChange}
             type='password'
             name='password'
-            value={signupInfo.password} // Binding the input value
             placeholder='Enter your password...'
+            required // Added required attribute
+            autoComplete='new-password' // Added autocomplete attribute
           />
         </div>
-        <button type='submit' disabled={loading}>
-          {loading ? 'Signing Up...' : 'Signup'} {/* Loading feedback */}
-        </button>
+        <button type='submit'>Signup</button>
         <span>Already have an account?</span>
         <Link to='/login'>Login</Link>
       </form>
