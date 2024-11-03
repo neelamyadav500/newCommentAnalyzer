@@ -34,18 +34,16 @@ function Login() {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        throw new Error(errorResponse.message || "Login failed. Please try again.");
+        throw new Error(errorResponse.error || "Login failed. Please try again.");
       }
 
       const result = await response.json();
-      const { success, message, jwtToken, name, error } = result;
+      const { success, message, jwtToken, name } = result;
       if (success) {
         handleSuccess(message);
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('loggedInUser', name);
         navigate('/home');
-      } else if (error) {
-        handleError(error.details[0].message);
       } else {
         handleError(message || "Login failed. Please try again.");
       }
@@ -66,6 +64,7 @@ function Login() {
             name='email'
             placeholder='Enter your email...'
             required
+            autoComplete='username' // Added autocomplete attribute
           />
         </div>
         <div>
@@ -75,7 +74,7 @@ function Login() {
             type='password'
             name='password'
             placeholder='Enter your password...'
-            autoComplete='current-password'
+            autoComplete='current-password' // Keep autocomplete attribute
             required
           />
         </div>
