@@ -39,6 +39,7 @@ const login = async (req, res) => {
         const errorMsg = "Authentication failed, email or password is invalid!";
 
         if (!user) {
+            console.error("Login failed: User not found for email:", email);
             return res.status(403).json({
                 message: errorMsg,
                 success: false,
@@ -47,6 +48,7 @@ const login = async (req, res) => {
 
         const isPassEqual = await bcrypt.compare(password, user.password);
         if (!isPassEqual) {
+            console.error("Login failed: Incorrect password for user:", email);
             return res.status(403).json({
                 message: errorMsg,
                 success: false,
@@ -67,7 +69,7 @@ const login = async (req, res) => {
             name: user.name,
         });
     } catch (error) {
-        console.error("Login error:", error); // Log the error for debugging
+        console.error("Login error:", error);
         res.status(500).json({
             message: "Internal server error",
             success: false,
