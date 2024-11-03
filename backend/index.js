@@ -27,11 +27,16 @@ app.get("/test", (req, res) => {
     res.send("Test route is working!");
 });
 
-// Error handling middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} request for '${req.url}'`);
+    next();
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack); // Log the error stack
     res.status(500).send('Something broke!'); // Send a generic error message
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 8080;
