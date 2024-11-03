@@ -8,7 +8,7 @@ function Login() {
     email: '',
     password: ''
   });
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,9 +19,17 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = loginInfo;
+
+    // Basic email format validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !password) {
       return handleError("Details are required!");
     }
+    if (!emailPattern.test(email)) {
+      return handleError("Please enter a valid email address.");
+    }
+
+    setLoading(true);
     try {
       const url = "https://new-comment-analyzer.vercel.app/auth/login";
       const response = await fetch(url, {
@@ -49,6 +57,8 @@ function Login() {
       }
     } catch (err) {
       handleError(err.message);
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -64,7 +74,7 @@ function Login() {
             name='email'
             placeholder='Enter your email...'
             required
-            autoComplete='username' // Added autocomplete attribute
+            autoComplete='username'
           />
         </div>
         <div>
@@ -74,11 +84,13 @@ function Login() {
             type='password'
             name='password'
             placeholder='Enter your password...'
-            autoComplete='current-password' // Keep autocomplete attribute
+            autoComplete='current-password'
             required
           />
         </div>
-        <button type='submit'>Login</button>
+        <button type='submit' disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
         <span>Don't have an account?</span>
         <Link to='/signup'>Signup</Link>
       </form>
