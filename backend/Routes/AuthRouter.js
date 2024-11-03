@@ -5,8 +5,8 @@ const router = require("express").Router();
 
 router.post("/login", loginValidation, async (req, res) => {
     try {
-        const result = await login(req.body);
-        res.status(200).json(result);
+        // Pass both req and res to the login function
+        await login(req, res); 
     } catch (error) {
         console.error("Login route error:", error);
         res.status(500).json({ error: error.message });
