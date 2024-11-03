@@ -23,7 +23,7 @@ function Login() {
       return handleError("Details are required!");
     }
     try {
-      const url = "http://localhost:8080/auth/login";
+      const url = "https://new-comment-analyzer-ny.vercel.app/auth/login";
       const response = await fetch(url, {
         method: "POST",
         headers: {
