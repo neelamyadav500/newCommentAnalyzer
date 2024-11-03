@@ -19,9 +19,12 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = loginInfo;
+
+    // Validate input fields
     if (!email || !password) {
       return handleError("Details are required!");
     }
+
     try {
       const url = "https://new-comment-analyzer-ny.vercel.app/auth/login";
       const response = await fetch(url, {
@@ -32,6 +35,7 @@ function Login() {
         body: JSON.stringify(loginInfo)
       });
 
+      // Handle the response
       const result = await response.json();
       console.log("Login result:", result);
 
@@ -48,7 +52,7 @@ function Login() {
         handleError(message || "Login failed. Please try again.");
       }
     } catch (err) {
-      handleError(err.message);
+      handleError(err.message || "An unexpected error occurred.");
     }
   };
 
@@ -59,19 +63,25 @@ function Login() {
         <div>
           <label htmlFor='email'>Email</label>
           <input
+            id='email' // Added id for accessibility
             onChange={handleChange}
             type='email'
             name='email'
             placeholder='Enter your email...'
+            autoComplete='email' // Added autocomplete
+            value={loginInfo.email} // Binding the input value
           />
         </div>
         <div>
           <label htmlFor='password'>Password</label>
           <input
+            id='password' // Added id for accessibility
             onChange={handleChange}
             type='password'
             name='password'
             placeholder='Enter your password...'
+            autoComplete='current-password' // Added autocomplete
+            value={loginInfo.password} // Binding the input value
           />
         </div>
         <button type='submit'>Login</button>
