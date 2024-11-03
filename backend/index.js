@@ -10,7 +10,11 @@ const CommentAnalyzerRouter = require("./Routes/CommentAnalyzerRouter");
 require("./Models/db");
 
 app.use(bodyParser.json());
-app.use(cors({ origin: "https://new-comment-analyzer-ny.vercel.app" }));
+app.use(cors({
+    origin: "https://new-comment-analyzer-ny.vercel.app", // Allowing specific frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 app.use("/auth", AuthRouter);
 app.use("/products", ProductRouter);
 app.use("/comments", CommentAnalyzerRouter);
