@@ -12,16 +12,20 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors({
-    origin: "https://new-comment-analyzer-ny.vercel.app", // Allow your frontend origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    credentials: true // Enable cookies and authentication headers
+    origin: "https://new-comment-analyzer-ny.vercel.app", // Your allowed origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // Allow credentials (like cookies or authorization headers)
 }));
 
+// Define routes after CORS middleware
 app.use("/auth", AuthRouter);
 app.use("/products", ProductRouter);
 app.use("/comments", CommentAnalyzerRouter);
 
-// Error handling middleware
+// Handle preflight requests
+app.options('*', cors());
+
+// Generic error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack); // Log the error stack
     res.status(500).send('Something broke!'); // Send a generic error message
