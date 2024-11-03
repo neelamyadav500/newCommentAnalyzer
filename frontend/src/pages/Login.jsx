@@ -23,7 +23,7 @@ function Login() {
       return handleError("Details are required!");
     }
     try {
-      const url = "https://new-comment-analyzer-ny.vercel.app/auth/login";
+      const url = "https://new-comment-analyzer.vercel.app/auth/login";
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -33,11 +33,14 @@ function Login() {
       });
 
       const result = await response.json();
+      console.log("Login result:", result);
+
       const { success, message, jwtToken, name, error } = result;
       if (success) {
         handleSuccess(message);
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('loggedInUser', name);
+        console.log("Navigating to /home");
         navigate('/home');
       } else if (error) {
         handleError(error?.details[0].message);
@@ -60,8 +63,6 @@ function Login() {
             type='email'
             name='email'
             placeholder='Enter your email...'
-            required // Added required attribute
-            autoComplete='email' // Added autocomplete attribute
           />
         </div>
         <div>
@@ -71,8 +72,6 @@ function Login() {
             type='password'
             name='password'
             placeholder='Enter your password...'
-            required // Added required attribute
-            autoComplete='current-password' // Added autocomplete attribute
           />
         </div>
         <button type='submit'>Login</button>
