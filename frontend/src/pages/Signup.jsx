@@ -29,7 +29,7 @@ function Signup() {
       return handleError("Details are required!")
     }
     try{
-      const url="https://new-comment-analyzer.vercel.app/auth/signup";
+      const url="https://new-comment-analyzer.vercel.app//auth/signup";
       const response = await fetch(url,{
         method: "POST",
         headers:{
