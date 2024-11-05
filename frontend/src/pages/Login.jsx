@@ -23,7 +23,7 @@ function Login() {
       return handleError("Details are required!");
     }
     try {
-      const url = "https://new-comment-analyzer.vercel.app/auth/login";
+      const url = "https://new-comment-analyzer-api.vercel.app/auth/login";
       const response = await fetch(url, {
         method: "POST",
         headers: {
