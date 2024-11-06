@@ -76,17 +76,36 @@ const fetchComments = async (videoId) => {
 
 // Function to analyze sentiment of a given text
 const getSentiment = (text) => {
-    const positiveWords = ['great', 'awesome', 'good', 'nice', 'excellent', 'love', 'amazing','wise','thanks'];
+    const positiveWords = ['great', 'awesome', 'good', 'nice', 'excellent', 'love', 'amazing', 'wise', 'thanks','lovely','sweet'];
     const negativeWords = ['bad', 'terrible', 'awful', 'worst', 'hate', 'dislike'];
+    const negationWords = ['not', 'no', 'never', 'none'];
 
-    const lowerCaseText = text.toLowerCase(); // Convert text to lowercase for consistent matching
-    const isPositive = positiveWords.some(word => lowerCaseText.includes(word));
-    const isNegative = negativeWords.some(word => lowerCaseText.includes(word));
+    const lowerCaseText = text.toLowerCase();
 
-    // Determine sentiment based on the presence of positive and negative words
-    if (isPositive && !isNegative) {
+    // Function to detect if a negation word appears close to a sentiment word
+    const hasNegation = (index, words) => {
+        // Check previous three words for a negation word (for context, e.g., "not good")
+        return words.slice(Math.max(0, index - 3), index).some(word => negationWords.includes(word));
+    };
+
+    // Split text into words and analyze
+    const words = lowerCaseText.split(/\s+/); // Split by whitespace
+    let positiveCount = 0;
+    let negativeCount = 0;
+
+    words.forEach((word, index) => {
+        // Check if word is in positive or negative words list
+        if (positiveWords.includes(word) && !hasNegation(index, words)) {
+            positiveCount++;
+        } else if (negativeWords.includes(word) || (positiveWords.includes(word) && hasNegation(index, words))) {
+            negativeCount++;
+        }
+    });
+
+    // Determine sentiment based on positive and negative counts
+    if (positiveCount > negativeCount) {
         return 'positive';
-    } else if (isNegative && !isPositive) {
+    } else if (negativeCount > positiveCount) {
         return 'negative';
     } else {
         return 'neutral';

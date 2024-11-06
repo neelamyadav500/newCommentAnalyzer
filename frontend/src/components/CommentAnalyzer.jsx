@@ -19,7 +19,7 @@ const CommentAnalyzer = () => {
                 return;
             }
 
-            const response = await axios.post('https://new-comment-analyzer-api.vercel.app/comments/analyze', {
+            const response = await axios.post('http://localhost:8080/comments/analyze', {
                 videoId: extractedVideoId,
             });
 
@@ -35,7 +35,7 @@ const CommentAnalyzer = () => {
     };
 
     const extractVideoId = (url) => {
-        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
         const match = url.match(regex);
         return match ? match[1] : null;
     };
