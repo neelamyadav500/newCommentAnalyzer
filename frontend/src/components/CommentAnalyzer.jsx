@@ -13,7 +13,7 @@ const CommentAnalyzer = () => {
         setError('');
         try {
             const extractedVideoId = extractVideoId(videoId.trim());
-            console.log("Extracted Video ID:", extractedVideoId);
+            console.log("Extracted Video ID:", extractedVideoId);  // Log the extracted ID
 
             if (!extractedVideoId) {
                 setError('Invalid YouTube URL. Please enter a valid URL.');
@@ -25,11 +25,14 @@ const CommentAnalyzer = () => {
                 videoId: extractedVideoId,
             });
 
+            console.log("API Response:", response);  // Log API response to check
+
             if (response.status === 200) {
                 setComments(response.data);
                 setError('');
             }
         } catch (err) {
+            console.error("Error:", err);  // Log detailed error
             setError('Failed to fetch comments. Please check the video ID and try again.');
         } finally {
             setLoading(false);
@@ -37,7 +40,7 @@ const CommentAnalyzer = () => {
     };
 
     const extractVideoId = (url) => {
-        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?=\s|$|\?)/;
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s]*)/;
         const match = url.match(regex);
         return match ? match[1] : null;
     };
