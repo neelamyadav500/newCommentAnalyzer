@@ -13,6 +13,8 @@ const CommentAnalyzer = () => {
         setError('');
         try {
             const extractedVideoId = extractVideoId(videoId.trim());
+            console.log("Extracted Video ID:", extractedVideoId);
+
             if (!extractedVideoId) {
                 setError('Invalid YouTube URL. Please enter a valid URL.');
                 setLoading(false);
@@ -29,13 +31,13 @@ const CommentAnalyzer = () => {
             }
         } catch (err) {
             setError('Failed to fetch comments. Please check the video ID and try again.');
-        }finally{
+        } finally {
             setLoading(false);
         }
     };
 
     const extractVideoId = (url) => {
-        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?=\s|$|\?)/;
         const match = url.match(regex);
         return match ? match[1] : null;
     };
@@ -54,29 +56,29 @@ const CommentAnalyzer = () => {
         <div className="container">
             <h1>Comment Analyzer</h1>
             <div className="search-bar">
-            <i 
-        onClick={handlePaste} 
-        className="fas fa-paste paste-icon" 
-        role="button" 
-        tabIndex={0} 
-        onKeyPress={(e) => e.key === 'Enter' && handlePaste()} // Enable Enter key for accessibility
-        aria-label="Paste URL"
-    ></i>
-            <input
-                type="text"
-                value={videoId}
-                onChange={handleInputChange}
-                placeholder="Enter YouTube Video URL"
-            />
+                <i 
+                    onClick={handlePaste} 
+                    className="fas fa-paste paste-icon" 
+                    role="button" 
+                    tabIndex={0} 
+                    onKeyPress={(e) => e.key === 'Enter' && handlePaste()}
+                    aria-label="Paste URL"
+                ></i>
+                <input
+                    type="text"
+                    value={videoId}
+                    onChange={handleInputChange}
+                    placeholder="Enter YouTube Video URL"
+                />
             </div>
             <button onClick={handleSearch}>Analyze</button>
 
-        {loading && (
-            <div className='loading'>
-                Analyzing...
-                <div className='spinner'></div>
+            {loading && (
+                <div className='loading'>
+                    Analyzing...
+                    <div className='spinner'></div>
                 </div>
-        )}
+            )}
 
             {error && <p className="error">{error}</p>}
             {comments.length > 0 && (
