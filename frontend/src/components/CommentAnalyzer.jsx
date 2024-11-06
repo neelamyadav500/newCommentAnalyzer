@@ -19,7 +19,7 @@ const CommentAnalyzer = () => {
                 return;
             }
 
-            const response = await axios.post('http://localhost:8080/comments/analyze', {
+            const response = await axios.post('https://new-comment-analyzer-api.vercel.app/comments/analyze', {
                 videoId: extractedVideoId,
             });
 
