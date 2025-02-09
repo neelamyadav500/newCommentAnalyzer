@@ -15,7 +15,12 @@ app.use("/auth", AuthRouter);
 app.use("/products", ProductRouter);
 app.use("/comments", CommentAnalyzerRouter);
 
+app.get("/", (req, res) => {
+    res.send("Welcome to Comment Analyzer API!");
+});
+
 app.get("/test", (req, res) => {
     res.send("Test route is working!");
 });
+
 module.exports = app;
