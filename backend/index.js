@@ -9,8 +9,15 @@ const CommentAnalyzerRouter = require("./Routes/CommentAnalyzerRouter");
 
 require("./Models/db");
 
+app.use(cors({
+    origin: "https://new-comment-analyzer-ui.vercel.app", // Allow frontend
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true
+}));
+
 app.use(bodyParser.json());
-app.use(cors());
+
 app.use("/auth", AuthRouter);
 app.use("/products", ProductRouter);
 app.use("/comments", CommentAnalyzerRouter);
@@ -21,6 +28,11 @@ app.get("/", (req, res) => {
 
 app.get("/test", (req, res) => {
     res.send("Test route is working!");
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
